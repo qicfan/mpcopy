@@ -4,6 +4,7 @@
 
 import signal, sys, os
 from multiprocessing import Process, Queue
+import time
 
 from copyJob import StartCopy
 from watch import StartWatch
@@ -45,6 +46,13 @@ def Start():
 
     watchProcess = Process(target=startWatch)
     consumerProcess = Process(target=startConsumer)
+    while(True):
+        try:
+            time.sleep(2)
+        except:
+            break
+    stop(None, None)
+
 
 if __name__ == '__main__':
     Start()
