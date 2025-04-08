@@ -39,7 +39,11 @@ def Start():
         stop()
 
     watchProcess = Process(target=StartWatch, args=(srcPath, destPath, q))
+    print("已启动源目录监控进程")
+    watchProcess.start()
     consumerProcess = Process(target=StartCopy, args=(srcPath, destPath, q))
+    print("已启动消费进程")
+    consumerProcess.start()
     while(True):
         try:
             time.sleep(2)
