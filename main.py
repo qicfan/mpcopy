@@ -26,12 +26,6 @@ def Start():
         except:
             pass
         sys.exit(0)
-    
-    def startWatch():
-        StartWatch(srcPath, q)
-
-    def startConsumer():
-        StartCopy(srcPath, destPath, q)
 
     signal.signal(signal.SIGINT, stop)
     signal.signal(signal.SIGTERM, stop)
@@ -44,14 +38,14 @@ def Start():
         print("目标目录为空")
         stop()
 
-    watchProcess = Process(target=startWatch)
-    consumerProcess = Process(target=startConsumer)
+    watchProcess = Process(target=StartWatch, args=(srcPath, destPath, q))
+    consumerProcess = Process(target=StartCopy, args=(srcPath, destPath, q))
     while(True):
         try:
             time.sleep(2)
         except:
             break
-    stop(None, None)
+    stop()
 
 
 if __name__ == '__main__':
