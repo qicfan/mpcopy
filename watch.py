@@ -39,9 +39,9 @@ class FileEventHandler(FileSystemEventHandler):
 
     def on_created(self, event):
         filePath = self.getRealPath(event.src_path)
-        if os.path.exists(filePath):
-            logger.info("已存在：{0}".format(filePath))
-            return False
+        if filePath.startswith('downloads'):
+            logger.info("不处理下载目录: {0}".format(event.src_path))
+            return True
         if event.is_directory:
             realPath = os.path.join(self.destPath, filePath)
             if not os.path.exists(realPath):
