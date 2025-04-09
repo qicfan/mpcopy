@@ -33,10 +33,18 @@ def StartCopy(srcPath: str, destPath: str, q: Queue):
             destRealPath = os.path.join(destPath, path)
             # 复制文件
             if not os.path.exists(srcRealPath):
-                shutil.copy(srcRealPath, destRealPath)
                 logger.warning("源文件不存在: {0}".format(srcRealPath))
+                continue
+            if os.path.exists(destRealPath):
+                logger.warning("目标文件已存在: {0}".format(destRealPath))
+                continue
+            try:
+                shutil.copy(srcRealPath, destRealPath)
+                logger.info("复制文件：{0} => {1}".format(srcRealPath, destRealPath))
+            except Exception as e:
+                logger.error("复制文件失败: {0} {1} => {2}".format(e, srcRealPath, destRealPath))
         else:
             # 队列为空，等待10秒
-            logger.info("队列为空，等待10秒")
-            time.sleep(10)
+            #logger.info("队列为空，等待10秒")
+            time.sleep(2)
 

@@ -2,6 +2,7 @@
 # 2. 启动监控进程（将新增文件写入队列）
 # 3. 启动消费进程（复制文件）
 
+import argparse
 import signal, sys, os
 from multiprocessing import Process, Queue
 import time
@@ -10,11 +11,9 @@ from copyJob import StartCopy
 from watch import StartWatch
 
 
-def Start():
+def Start(srcPath: str, destPath: str):
     watchProcess: Process | None = None
     consumerProcess: Process | None = None
-    srcPath: str = ""
-    destPath: str = ""
     q = Queue()
 
     def stop():
@@ -29,8 +28,6 @@ def Start():
 
     signal.signal(signal.SIGINT, stop)
     signal.signal(signal.SIGTERM, stop)
-    srcPath = "/src"
-    destPath = "/dest"
     if (srcPath == "" or srcPath is None):
         print("源目录为空")
         stop()
@@ -53,4 +50,18 @@ def Start():
 
 
 if __name__ == '__main__':
-    Start()
+    key: str = ''
+    parser = argparse.ArgumentParser(prog='mpcopy', description='监控目录变化，同步复制文件到网盘', formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('-s', '--src_path', help='源目录')
+    parser.add_argument('-d', '--dest_path', help='目标目录')
+    srcPath = '/src'
+    destPath = '/dest'
+    args, unknown = parser.parse_known_args()
+    print("参数：", args)
+    if args.src_path != None:
+        srcPath = args.src_path
+    if args.dest_path != None:
+        destPath = args.dest_path
+    print("源目录：", srcPath)
+    print("目标目录：", destPath)
+    Start(srcPath, destPath)
