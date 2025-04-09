@@ -39,13 +39,11 @@ class FileEventHandler(FileSystemEventHandler):
         return True
 
     def on_modified(self, event):
-        logger.info("修改: {0}".format(event.src_path))
         return True
 
     def on_created(self, event):
         filePath = self.getRealPath(event.src_path)
         if filePath.startswith('downloads'):
-            logger.info("不处理下载目录: {0}".format(event.src_path))
             return True
         if event.is_directory:
             realPath = os.path.join(self.destPath, filePath)

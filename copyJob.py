@@ -39,6 +39,10 @@ def StartCopy(srcPath: str, destPath: str, q: Queue):
                 logger.warning("目标文件已存在: {0}".format(destRealPath))
                 continue
             try:
+                dirname = os.path.dirname(destRealPath)
+                # 如果目录不存在，先创建目录
+                if not os.path.exists(dirname):
+                    os.makedirs(dirname)
                 shutil.copy(srcRealPath, destRealPath)
                 logger.info("复制文件：{0} => {1}".format(srcRealPath, destRealPath))
             except Exception as e:
@@ -46,5 +50,5 @@ def StartCopy(srcPath: str, destPath: str, q: Queue):
         else:
             # 队列为空，等待10秒
             #logger.info("队列为空，等待10秒")
-            time.sleep(2)
+            time.sleep(10)
 
