@@ -23,18 +23,23 @@ class FileEventHandler(FileSystemEventHandler):
         newPath: str = path.lstrip(self.srcPath)
         if newPath.startswith(os.sep):
             newPath.lstrip(os.sep)
+        if newPath.startswith("wnloads"):
+            newPath = "do{0}".format(newPath)
         return newPath
 
     def on_any_event(self, event):
         return True
 
     def on_moved(self, event):
+        logger.info("移动: {0} => {1}".format(event.src_path, event.dest_path))
         return True
     
     def on_deleted(self, event):
+        logger.info("删除: {0}".format(event.src_path))
         return True
 
     def on_modified(self, event):
+        logger.info("修改: {0}".format(event.src_path))
         return True
 
     def on_created(self, event):
@@ -48,6 +53,9 @@ class FileEventHandler(FileSystemEventHandler):
                 os.makedirs(realPath)
                 logger.info("创建目录: {0}".format(realPath))
         else:
+            filename, ext = os.path.splitext(filePath)
+            if ext == ".mp":
+                filePath = filename
             self.q.put(filePath)
             logger.info("新增文件: {0} => {1}".format(filePath, event.src_path))
 
